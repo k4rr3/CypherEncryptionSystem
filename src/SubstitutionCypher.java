@@ -182,8 +182,6 @@ public class SubstitutionCypher extends CommandLineProgram {
     }
 
     public char[][] createKey(String left, String right) {
-        char[] leftArray = left.toCharArray();
-        char[] rightArray = right.toCharArray();
         int pairsOfNumbers = 0;
         if (left.length() <= right.length()) {
             pairsOfNumbers = left.length();
@@ -193,8 +191,8 @@ public class SubstitutionCypher extends CommandLineProgram {
         if (pairsOfNumbers != 0) {
             char[][] keyCreated = new char[pairsOfNumbers][2];
             for (int i = 0; i < pairsOfNumbers; i++) {
-                keyCreated[i][0] = leftArray[i];
-                keyCreated[i][1] = rightArray[i];
+                keyCreated[i][0] = left.charAt(i);
+                keyCreated[i][1] = right.charAt(i);
             }
             return keyCreated;
         } else {
@@ -241,21 +239,16 @@ public class SubstitutionCypher extends CommandLineProgram {
     }
 
     public String encodeText(char[][] key, String clearText) {
-        char[] clearTextArray = clearText.toCharArray();
         char[] encodedText = new char[clearText.length()];
-        boolean isNull = false;
-        int notCoincidences = 0;
-        int coincidences = 0;
-        if (clearTextArray.length == 0) {
+        if (clearText.length() == 0) {
             return new String("");
         } else {
-            for (int j = 0; j < clearTextArray.length; j++) {
+            for (int j = 0; j < clearText.length(); j++) {
+                int notCoincidences = 0;
                 for (int i = 0; i < key.length; i++) {
-
-                    if (clearTextArray[j] == key[i][0]) {
-                        encodedText[coincidences] = key[i][1];
+                    if (clearText.charAt(j) == key[i][0]) {
+                        encodedText[j] = key[i][1];
                         notCoincidences = 0;
-                        coincidences++;
                         break;
                     } else {
                         notCoincidences++;
