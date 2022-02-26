@@ -1,5 +1,6 @@
 import acm.program.CommandLineProgram;
 
+import java.awt.event.KeyListener;
 import java.util.Arrays;
 
 public class SubstitutionCypher extends CommandLineProgram {
@@ -11,11 +12,11 @@ public class SubstitutionCypher extends CommandLineProgram {
         testContainsInSuffix();
         testUnique();
         testIsValid();
-//        testInvert();
-//        testCreateKey();
-//        testEncodeChar();
-//        testEncodeText();
-//        testDecodeText();
+        testInvert();
+        testCreateKey();
+        testEncodeChar();
+        testEncodeText();
+        testDecodeText();
     }
 
 
@@ -159,7 +160,16 @@ public class SubstitutionCypher extends CommandLineProgram {
     }
 
     public char[][] invert(char[][] key) {
-        throw new UnsupportedOperationException("Pas 6");
+        if (key.length == 0) {
+            return new char[0][0];
+        }
+        char[][] keyInverted = new char[key.length][key[0].length];
+        for (int i = 0; i < key.length; i++) {
+            keyInverted[i][1] = key[i][0];
+            keyInverted[i][0] = key[i][1];
+        }
+        return keyInverted;
+        //throw new UnsupportedOperationException("Pas 6");
     }
 
     public void testInvert() {
@@ -172,7 +182,28 @@ public class SubstitutionCypher extends CommandLineProgram {
     }
 
     public char[][] createKey(String left, String right) {
-        throw new UnsupportedOperationException("Pas 7");
+        char[] leftArray = left.toCharArray();
+        char[] rightArray = right.toCharArray();
+        int pairsOfNumbers = 0;
+        if (left.length() <= right.length()) {
+            pairsOfNumbers = left.length();
+        } else {
+            pairsOfNumbers = right.length();
+        }
+        if (pairsOfNumbers != 0) {
+            char[][] keyCreated = new char[pairsOfNumbers][2];
+            for (int i = 0; i < pairsOfNumbers; i++) {
+                keyCreated[i][0] = leftArray[i];
+                keyCreated[i][1] = rightArray[i];
+            }
+            return keyCreated;
+        } else {
+            return new char[0][0];
+        }
+
+
+        //throw new UnsupportedOperationException("Pas 7");
+
     }
 
     public void testCreateKey() {
@@ -187,7 +218,17 @@ public class SubstitutionCypher extends CommandLineProgram {
     }
 
     public int encodeChar(char[][] key, char c) {
-        throw new UnsupportedOperationException("Pas 8");
+        int num = -1;
+        if (key.length != 0) {
+            for (int i = 0; i < key.length; i++) {
+                if (c == key[i][0]) {
+                    num = key[i][1];
+                }
+            }
+        }
+        return num;
+
+        //throw new UnsupportedOperationException("Pas 8");
     }
 
     public void testEncodeChar() {
@@ -200,8 +241,37 @@ public class SubstitutionCypher extends CommandLineProgram {
     }
 
     public String encodeText(char[][] key, String clearText) {
-        throw new UnsupportedOperationException("Pas 9");
+        char[] clearTextArray = clearText.toCharArray();
+        char[] encodedText = new char[clearText.length()];
+        boolean isNull = false;
+        int notCoincidences = 0;
+        int coincidences = 0;
+        if (clearTextArray.length == 0) {
+            return new String("");
+        } else {
+            for (int j = 0; j < clearTextArray.length; j++) {
+                for (int i = 0; i < key.length; i++) {
+
+                    if (clearTextArray[j] == key[i][0]) {
+                        encodedText[coincidences] = key[i][1];
+                        notCoincidences = 0;
+                        coincidences++;
+                        break;
+                    } else {
+                        notCoincidences++;
+                    }
+
+                }
+                if (notCoincidences == key.length) {
+                    return null;
+                }
+            }
+        }
+        return new String(encodedText);
     }
+
+    //throw new UnsupportedOperationException("Pas 9");
+
 
     public void testEncodeText() {
         printlnInfo("BEGIN encodeText");
@@ -213,8 +283,37 @@ public class SubstitutionCypher extends CommandLineProgram {
     }
 
     public String decodeText(char[][] key, String encodedText) {
-        throw new UnsupportedOperationException("Pas 10");
+        key = invert(key);
+        return new String(encodeText(key, encodedText));
     }
+        /*char[] clearTextArray = encodedText.toCharArray();
+        char[] encodeddText = new char[encodedText.length()];
+        boolean isNull = false;
+        int notCoincidences = 0;
+        int coincidences = 0;
+        if (clearTextArray.length == 0) {
+            return new String("");
+        } else {
+            for (int j = 0; j < clearTextArray.length; j++) {
+                for (int i = 0; i < key.length; i++) {
+
+                    if (clearTextArray[j] == key[i][1]) {
+                        encodeddText[coincidences] = key[i][0];
+                        notCoincidences = 0;
+                        coincidences++;
+                        break;
+                    } else {
+                        notCoincidences++;
+                    }
+
+                }
+                if (notCoincidences == key.length) {
+                    return null;
+                }
+            }
+        }
+        return new String(encodeddText);*/
+    //throw new UnsupportedOperationException("Pas 10");
 
     public void testDecodeText() {
         printlnInfo("BEGIN decodeText");
