@@ -20,25 +20,17 @@ public class SubstitutionCypher extends CommandLineProgram {
 
 
     public boolean allPairs(char[][] key) {
-        boolean isPair = true;
         if (key != null) {
             for (int i = 0; i < key.length; i++) {
                 if (key[i] == null || key[i].length != 2) {
-                    isPair = false;
-                    break;
+                    return false;
                 }
             }
         } else {
-            isPair = false;
+            return false;
         }
-        return isPair;
-        /*for (int i = 0; key[i] != null && i < key.length; i++) {
-                for (int j = 0; j < key[i].length; j++) {
-                    if (key[i][j] != ' ') {
-                        println(key[i][j]);
-                    }
-                }*/
-        //throw new UnsupportedOperationException("Pas 1");
+        return true;
+
     }
 
     public void testAllPairs() {
@@ -49,7 +41,6 @@ public class SubstitutionCypher extends CommandLineProgram {
         assertEquals("allPairs4", false, allPairs(new char[][]{{}}));
         assertEquals("allPairs5", true, allPairs(new char[][]{{'a', 'b'}}));
         assertEquals("allPairs6", false, allPairs(new char[][]{{'a', 'b'}, {'a'}}));
-
         printlnInfo("END allPairs");
         printBar();
     }
@@ -65,7 +56,6 @@ public class SubstitutionCypher extends CommandLineProgram {
 
         }
         return keyColumn;
-        //throw new UnsupportedOperationException("Pas 2");
     }
 
     public void testGetColumn() {
@@ -81,16 +71,14 @@ public class SubstitutionCypher extends CommandLineProgram {
     }
 
     public boolean containsInSuffix(char[] chars, int initialPos, char c) {
-        boolean containsInSuffix = false;
         if (chars.length > initialPos) {
             for (int i = initialPos; i < chars.length; i++) {
                 if (c == chars[i]) {
-                    containsInSuffix = true;
+                    return true;
                 }
             }
         }
-        return containsInSuffix;
-        //throw new UnsupportedOperationException("Pas 3");
+        return false;
     }
 
     public void testContainsInSuffix() {
@@ -104,14 +92,12 @@ public class SubstitutionCypher extends CommandLineProgram {
     }
 
     public boolean unique(char[] chars) {
-        boolean isUnique = true;
         for (int i = 0; i < chars.length; i++) {
             if (containsInSuffix(chars, i + 1, chars[i])) {
-                isUnique = false;
+                return false;
             }
         }
-        return isUnique;
-        //throw new UnsupportedOperationException("Pas 4");
+        return true;
     }
 
     public void testUnique() {
@@ -126,22 +112,21 @@ public class SubstitutionCypher extends CommandLineProgram {
     }
 
     public boolean isValid(char[][] key) {
-        boolean valid = allPairs(key);
-        if (valid && key.length != 0) {
+
+        if (allPairs(key) && key.length != 0) {
             for (int j = 0; j < key[0].length; j++) {
                 char[] column = new char[key[0].length];
                 for (int i = 0; i < key.length; i++) {
                     column[i] = key[i][j];
                     if (!unique(column)) {
-                        valid = false;
+                        return  false;
                     }
                 }
             }
 
 
         }
-        return valid;
-        //throw new UnsupportedOperationException("Pas 5");
+        return allPairs(key);
     }
 
     public void testIsValid() {
@@ -168,7 +153,6 @@ public class SubstitutionCypher extends CommandLineProgram {
             keyInverted[i][0] = key[i][1];
         }
         return keyInverted;
-        //throw new UnsupportedOperationException("Pas 6");
     }
 
     public void testInvert() {
@@ -197,10 +181,6 @@ public class SubstitutionCypher extends CommandLineProgram {
         } else {
             return new char[0][0];
         }
-
-
-        //throw new UnsupportedOperationException("Pas 7");
-
     }
 
     public void testCreateKey() {
@@ -224,8 +204,6 @@ public class SubstitutionCypher extends CommandLineProgram {
             }
         }
         return num;
-
-        //throw new UnsupportedOperationException("Pas 8");
     }
 
     public void testEncodeChar() {
@@ -240,7 +218,7 @@ public class SubstitutionCypher extends CommandLineProgram {
     public String encodeText(char[][] key, String clearText) {
         char[] encodedText = new char[clearText.length()];
         for (int i = 0; i < clearText.length(); i++) {
-            if (clearText.charAt(i) != '\u0000' && encodeChar(key, clearText.charAt(i)) != -1) {
+            if (encodeChar(key, clearText.charAt(i)) != -1) {
                 encodedText[i] = (char) encodeChar(key, clearText.charAt(i));
 
             } else {
@@ -292,23 +270,21 @@ public class SubstitutionCypher extends CommandLineProgram {
         return new String(encodedText);
     }*/
 
-    //throw new UnsupportedOperationException("Pas 9");
-
 
     public void testEncodeText() {
         printlnInfo("BEGIN encodeText");
         assertEquals("encodeText1", "", encodeText(new char[][]{}, ""));
         assertEquals("encodeText2", null, encodeText(new char[][]{{'a', 'b'}}, "aca"));
         assertEquals("encodeText3", "bddb", encodeText(new char[][]{{'a', 'b'}, {'c', 'd'}}, "acca"));
-        //assertEquals("encodeText3", null, encodeText(new char[][]{{'a', 'b'}, {'c', 'd'}}, "adca"));
-        //assertEquals("encodeText3", "bdxb", encodeText(new char[][]{{'a', 'b'}, {'c', 'd'},{'d','x'}}, "acda"));
         printlnInfo("END encodeText");
         printBar();
     }
 
     public String decodeText(char[][] key, String encodedText) {
-        key = invert(key);
-        return new String(encodeText(key, encodedText));
+        return encodeText(invert(key), encodedText);
+
+        /*key = invert(key);
+        return new String(encodeText(key, encodedText));*/
     }
         /*char[] clearTextArray = encodedText.toCharArray();
         char[] encodeddText = new char[encodedText.length()];
@@ -337,7 +313,6 @@ public class SubstitutionCypher extends CommandLineProgram {
             }
         }
         return new String(encodeddText);*/
-    //throw new UnsupportedOperationException("Pas 10");
 
     public void testDecodeText() {
         printlnInfo("BEGIN decodeText");
