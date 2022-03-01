@@ -1,6 +1,5 @@
 import acm.program.CommandLineProgram;
 
-import java.awt.event.KeyListener;
 import java.util.Arrays;
 
 public class SubstitutionCypher extends CommandLineProgram {
@@ -240,6 +239,16 @@ public class SubstitutionCypher extends CommandLineProgram {
 
     public String encodeText(char[][] key, String clearText) {
         char[] encodedText = new char[clearText.length()];
+        for (int i = 0; i < clearText.length(); i++) {
+            if (clearText.charAt(i) != '\u0000' && encodeChar(key, clearText.charAt(i)) != -1) {
+                encodedText[i] = (char) encodeChar(key, clearText.charAt(i));
+
+            } else {
+                return null;
+            }
+        }
+        return new String(encodedText);
+        /* char[] encodedText = new char[clearText.length()];
         if (clearText.length() == 0) {
             return new String("");
         } else {
@@ -253,8 +262,8 @@ public class SubstitutionCypher extends CommandLineProgram {
                     return null;
                 }
             }
-        }
-        return new String(encodedText);
+        }*/
+
     }
     /*    public String encodeText(char[][] key, String clearText) {
         char[] encodedText = new char[clearText.length()];
