@@ -119,12 +119,10 @@ public class SubstitutionCypher extends CommandLineProgram {
                 for (int i = 0; i < key.length; i++) {
                     column[i] = key[i][j];
                     if (!unique(column)) {
-                        return  false;
+                        return false;
                     }
                 }
             }
-
-
         }
         return allPairs(key);
     }
@@ -195,15 +193,15 @@ public class SubstitutionCypher extends CommandLineProgram {
     }
 
     public int encodeChar(char[][] key, char c) {
-        int num = -1;
+        int encodedChar = -1;
         if (key.length != 0) {
             for (int i = 0; i < key.length; i++) {
                 if (c == key[i][0]) {
-                    num = key[i][1];
+                    encodedChar = key[i][1];
                 }
             }
         }
-        return num;
+        return encodedChar;
     }
 
     public void testEncodeChar() {
