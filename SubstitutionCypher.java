@@ -4,7 +4,6 @@ import java.util.Arrays;
 
 public class SubstitutionCypher extends CommandLineProgram {
 
-
     public void run() {
         testAllPairs();
         testGetColumn();
@@ -17,7 +16,6 @@ public class SubstitutionCypher extends CommandLineProgram {
         testEncodeText();
         testDecodeText();
     }
-
 
     public boolean allPairs(char[][] key) {
         if (key != null) {
@@ -48,7 +46,6 @@ public class SubstitutionCypher extends CommandLineProgram {
     public char[] getColumn(char[][] key, int column) {
         if (key.length == 0) {
             return new char[]{};
-
         }
         char[] keyColumn = new char[key.length];
         for (int i = 0; i < keyColumn.length; i++) {
@@ -112,8 +109,9 @@ public class SubstitutionCypher extends CommandLineProgram {
     }
 
     public boolean isValid(char[][] key) {
-
-        if (allPairs(key) && key.length != 0) {
+        if (!allPairs(key)) {
+            return false;
+        } else if (key.length != 0) {
             for (int j = 0; j < key[0].length; j++) {
                 char[] column = new char[key[0].length];
                 for (int i = 0; i < key.length; i++) {
@@ -124,7 +122,7 @@ public class SubstitutionCypher extends CommandLineProgram {
                 }
             }
         }
-        return allPairs(key);
+        return true;
     }
 
     public void testIsValid() {
@@ -163,12 +161,7 @@ public class SubstitutionCypher extends CommandLineProgram {
     }
 
     public char[][] createKey(String left, String right) {
-        int numberOfPairs;
-        if (left.length() <= right.length()) {
-            numberOfPairs = left.length();
-        } else {
-            numberOfPairs = right.length();
-        }
+        int numberOfPairs = minStrLength(left, right);
         if (numberOfPairs != 0) {
             char[][] keyCreated = new char[numberOfPairs][2];
             for (int i = 0; i < numberOfPairs; i++) {
@@ -179,6 +172,16 @@ public class SubstitutionCypher extends CommandLineProgram {
         } else {
             return new char[0][0];
         }
+    }
+
+    public int minStrLength(String str1, String str2) {
+        int min;
+        if (str1.length() < str2.length()) {
+            min = str1.length();
+        } else {
+            min = str2.length();
+        }
+        return min;
     }
 
     public void testCreateKey() {
@@ -218,12 +221,12 @@ public class SubstitutionCypher extends CommandLineProgram {
         for (int i = 0; i < clearText.length(); i++) {
             if (encodeChar(key, clearText.charAt(i)) != -1) {
                 encodedText[i] = (char) encodeChar(key, clearText.charAt(i));
-
             } else {
                 return null;
             }
         }
         return new String(encodedText);
+    }
         /* char[] encodedText = new char[clearText.length()];
         if (clearText.length() == 0) {
             return new String("");
@@ -240,7 +243,7 @@ public class SubstitutionCypher extends CommandLineProgram {
             }
         }*/
 
-    }
+
     /*    public String encodeText(char[][] key, String clearText) {
         char[] encodedText = new char[clearText.length()];
         if (clearText.length() == 0) {
@@ -280,10 +283,9 @@ public class SubstitutionCypher extends CommandLineProgram {
 
     public String decodeText(char[][] key, String encodedText) {
         return encodeText(invert(key), encodedText);
-
+    }
         /*key = invert(key);
         return new String(encodeText(key, encodedText));*/
-    }
         /*char[] clearTextArray = encodedText.toCharArray();
         char[] encodeddText = new char[encodedText.length()];
         boolean isNull = false;
