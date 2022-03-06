@@ -111,7 +111,7 @@ public class SubstitutionCypher extends CommandLineProgram {
     public boolean isValid(char[][] key) {
         if (!allPairs(key)) {
             return false;
-        } else if (key.length != 0) {
+        } else if (key.length > 0) {
             for (int j = 0; j < key[0].length; j++) {
                 char[] column = new char[key[0].length];
                 for (int i = 0; i < key.length; i++) {
@@ -135,6 +135,9 @@ public class SubstitutionCypher extends CommandLineProgram {
         assertEquals("isValid6", false, isValid(new char[][]{{'a', 'b'}, {'a', 'c'}}));
         assertEquals("isValid7", false, isValid(new char[][]{{'a', 'b'}, {'c', 'b'}}));
         assertEquals("isValid8", true, isValid(new char[][]{{'a', 'b'}, {'c', 'd'}}));
+
+        //assertEquals("isValid9", false, isValid(new char[][]{{'a', 'b'}, {'c', 'd'},{'f'}}));
+        //assertEquals("isValid10", false, isValid(new char[][]{{'a', 'b'}, {},{'c', 'd'},{'f'}}));
         printlnInfo("END isValid");
         printBar();
     }
@@ -191,20 +194,22 @@ public class SubstitutionCypher extends CommandLineProgram {
         assertEquals("createKey3", new char[][]{{'a', 'b'}}, createKey("a", "bc"));
         assertEquals("createKey4", new char[][]{{'a', 'c'}}, createKey("ab", "c"));
         assertEquals("createKey5", new char[][]{{'a', 'c'}, {'b', 'd'}}, createKey("ab", "cd"));
+
+        //assertEquals("createKey6", new char[][]{{'a', 'c'}, {'b', 'd'},{'c','c'}}, createKey("abcd", "cdc"));
+
         printlnInfo("END createKey");
         printBar();
     }
 
     public int encodeChar(char[][] key, char c) {
-        int encodedChar = -1;
         if (key.length != 0) {
             for (int i = 0; i < key.length; i++) {
                 if (c == key[i][0]) {
-                    encodedChar = key[i][1];
+                    return key[i][1];
                 }
             }
         }
-        return encodedChar;
+        return -1;
     }
 
     public void testEncodeChar() {
@@ -227,51 +232,6 @@ public class SubstitutionCypher extends CommandLineProgram {
         }
         return new String(encodedText);
     }
-        /* char[] encodedText = new char[clearText.length()];
-        if (clearText.length() == 0) {
-            return new String("");
-        } else {
-            for (int j = 0; j < clearText.length(); j++) {
-                for (int i = 0; i < key.length; i++) {
-                    if (clearText.charAt(j) == key[i][0]) {
-                        encodedText[j] = key[i][1];
-                    }
-                }
-                if (encodedText[j] == '\u0000') {
-                    return null;
-                }
-            }
-        }*/
-
-
-    /*    public String encodeText(char[][] key, String clearText) {
-        char[] encodedText = new char[clearText.length()];
-        if (clearText.length() == 0) {
-            return new String("");
-        } else {
-            for (int j = 0; j < clearText.length(); j++) {
-                int notCoincidences = 0;
-                for (int i = 0; i < key.length; i++) {
-                    if (clearText.charAt(j) == key[i][0]) {
-                        encodedText[j] = key[i][1];
-                        notCoincidences = 0;
-                    } else {
-                        notCoincidences++;
-                    }
-
-                }
-                if (notCoincidences == key.length) {
-                    return null;
-                }
-                if(encodedText[j]== '\u0000'){
-                    return null;
-                }
-            }
-        }
-        return new String(encodedText);
-    }*/
-
-
     public void testEncodeText() {
         printlnInfo("BEGIN encodeText");
         assertEquals("encodeText1", "", encodeText(new char[][]{}, ""));
@@ -284,40 +244,13 @@ public class SubstitutionCypher extends CommandLineProgram {
     public String decodeText(char[][] key, String encodedText) {
         return encodeText(invert(key), encodedText);
     }
-        /*key = invert(key);
-        return new String(encodeText(key, encodedText));*/
-        /*char[] clearTextArray = encodedText.toCharArray();
-        char[] encodeddText = new char[encodedText.length()];
-        boolean isNull = false;
-        int notCoincidences = 0;
-        int coincidences = 0;
-        if (clearTextArray.length == 0) {
-            return new String("");
-        } else {
-            for (int j = 0; j < clearTextArray.length; j++) {
-                for (int i = 0; i < key.length; i++) {
-
-                    if (clearTextArray[j] == key[i][1]) {
-                        encodeddText[coincidences] = key[i][0];
-                        notCoincidences = 0;
-                        coincidences++;
-                        break;
-                    } else {
-                        notCoincidences++;
-                    }
-
-                }
-                if (notCoincidences == key.length) {
-                    return null;
-                }
-            }
-        }
-        return new String(encodeddText);*/
 
     public void testDecodeText() {
         printlnInfo("BEGIN decodeText");
         assertEquals("decodeText1", "", decodeText(new char[][]{}, ""));
         assertEquals("decodeText2", "acca", decodeText(new char[][]{{'a', 'b'}, {'c', 'd'}}, "bddb"));
+
+        //assertEquals("decodeText3", "accacx", decodeText(new char[][]{{'a', 'b'}, {'c', 'd'},{'x','c'}}, "bddbdc"));
         printlnInfo("END decodeText");
         printBar();
     }
